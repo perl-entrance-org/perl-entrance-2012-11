@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
 use utf8;
 use Mojolicious::Lite;
+use Encode;
 
 get '/' => sub {
   my $self = shift;
@@ -12,7 +13,7 @@ post '/post' => sub {
   my $body = $self->param('body');
   my $datafile = qq{myapp.dat};
   open my $fh, '>>', $datafile or die $!;
-  print $fh qq{$body\n};
+  print $fh encode_utf8(qq{$body\n});
   close $fh;
   $self->stash(body => $body);
   $self->render('post');
