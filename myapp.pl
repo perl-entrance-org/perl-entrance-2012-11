@@ -4,6 +4,8 @@ use Mojolicious::Lite;
 
 get '/' => sub {
   my $self = shift;
+  my $body = $self->param('body');
+  $self->stash(body => $body);
   $self->render('index');
 };
 
@@ -17,6 +19,7 @@ __DATA__
   %= text_field 'body'
   %= submit_button '投稿する'
 % end
+<p><%= $body %></p>
 
 @@ layouts/default.html.ep
 <!DOCTYPE html>
