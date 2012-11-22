@@ -5,6 +5,12 @@ use Encode;
 
 get '/' => sub {
   my $self = shift;
+  my $datafile = qq{myapp.dat};
+  open my $fh, '<', $datafile or die $!;
+  my @entries = <$fh>;
+  close $fh;
+  @entries = map { decode_utf8($_) } @entries;
+  $self->stash(entries => \@entries);
   $self->render('index');
 };
 
@@ -32,6 +38,9 @@ __DATA__
 % layout 'default';
 % title '入力フォーム';
 %= include 'form'
+% for my $entry (@{$entries}) {
+  <p><%= $entry %></p>
+% }
 
 @@ post.html.ep
 % layout 'default';
