@@ -17,21 +17,21 @@ post '/post' => sub {
 app->start;
 __DATA__
 
-@@ index.html.ep
-% layout 'default';
-% title '入力フォーム';
+@@ form.html.ep
 %= form_for '/post' => method => 'POST' => begin
   %= text_field 'body'
   %= submit_button '投稿する'
 % end
 
+@@ index.html.ep
+% layout 'default';
+% title '入力フォーム';
+%= include 'form'
+
 @@ post.html.ep
 % layout 'default';
 % title '出力';
-%= form_for '/post' => method => 'POST' => begin
-  %= text_field 'body'
-  %= submit_button '投稿する'
-% end
+%= include 'form'
 <p><%= $body %></p>
 
 @@ layouts/default.html.ep
