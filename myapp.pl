@@ -1,8 +1,6 @@
 #!/usr/bin/env perl
+use utf8;
 use Mojolicious::Lite;
-
-# Documentation browser under "/perldoc"
-plugin 'PODRenderer';
 
 get '/' => sub {
   my $self = shift;
@@ -15,7 +13,10 @@ __DATA__
 @@ index.html.ep
 % layout 'default';
 % title 'Welcome';
-Welcome to the Mojolicious real-time web framework!
+%= form_for '/' => begin
+  %= text_field 'body'
+  %= submit_button '投稿する'
+% end
 
 @@ layouts/default.html.ep
 <!DOCTYPE html>
