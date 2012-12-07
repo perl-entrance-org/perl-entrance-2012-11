@@ -6,6 +6,10 @@ use Encode;
 get '/' => sub {
   my $self = shift;
   my $datafile = qq{myapp.dat};
+  unless (-e $datafile ) {
+    open my $fh, '>', $datafile or die $!;
+    close $fh;
+  }
   open my $fh, '<', $datafile or die $!;
   my @entries = <$fh>;
   close $fh;
