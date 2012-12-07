@@ -25,7 +25,7 @@ post '/post' => sub {
     $self->redirect_to('/');
     return;
   }
-  my $now = time;
+  my $now = localtime;
   $body .= qq{ ($now)};
   my $datafile = qq{myapp.dat};
   open my $fh, '>>', $datafile or die $!;
