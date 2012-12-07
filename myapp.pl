@@ -25,8 +25,7 @@ post '/post' => sub {
   open my $fh, '>>', $datafile or die $!;
   print $fh encode_utf8(qq{$body\n});
   close $fh;
-  $self->stash(body => $body);
-  $self->render('post');
+  $self->redirect_to('/');
 };
 
 app->start;
@@ -45,12 +44,6 @@ __DATA__
 % for my $entry (@{$entries}) {
   <p><%= $entry %></p>
 % }
-
-@@ post.html.ep
-% layout 'default';
-% title '出力';
-%= include 'form'
-<p><%= $body %></p>
 
 @@ layouts/default.html.ep
 <!DOCTYPE html>
