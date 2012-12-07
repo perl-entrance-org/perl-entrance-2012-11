@@ -25,6 +25,8 @@ post '/post' => sub {
     $self->redirect_to('/');
     return;
   }
+  my $now = time;
+  $body .= qq{ ($now)};
   my $datafile = qq{myapp.dat};
   open my $fh, '>>', $datafile or die $!;
   print $fh encode_utf8(qq{$body\n});
