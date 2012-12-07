@@ -2,6 +2,7 @@
 use utf8;
 use Mojolicious::Lite;
 use Encode;
+use Time::Piece;
 
 get '/' => sub {
   my $self = shift;
@@ -26,7 +27,7 @@ post '/post' => sub {
     return;
   }
   my $now = localtime;
-  $body .= qq{ ($now)};
+  $body .= sprintf qq{ (%s %s)}, $now->ymd('/'), $now->hms(':');
   my $datafile = qq{myapp.dat};
   open my $fh, '>>', $datafile or die $!;
   print $fh encode_utf8(qq{$body\n});
