@@ -13,7 +13,7 @@ get '/' => sub {
   open my $fh, '<', $datafile or die $!;
   my @entries = <$fh>;
   close $fh;
-  @entries = map { decode_utf8($_) } @entries;
+  @entries = map { decode_utf8($_) } reverse @entries;
   $self->stash(entries => \@entries);
   $self->render('index');
 };
