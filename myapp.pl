@@ -21,6 +21,10 @@ get '/' => sub {
 post '/post' => sub {
   my $self = shift;
   my $body = $self->param('body');
+  if ($body =~ /\A[\s　]*\z/ms) {
+    $self->redirect_to('/');
+    return;
+  }
   my $datafile = qq{myapp.dat};
   open my $fh, '>>', $datafile or die $!;
   print $fh encode_utf8(qq{$body\n});
