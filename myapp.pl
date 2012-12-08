@@ -3,6 +3,12 @@ use utf8;
 use Mojolicious::Lite;
 use Encode;
 use Time::Piece;
+use Mojo::Util;
+
+helper xml_escape => sub {
+  shift;
+  Mojo::Util::xml_escape(@_)
+};
 
 get '/' => sub {
   my $self = shift;
@@ -50,6 +56,7 @@ __DATA__
 %= include 'form'
 % for my $entry (@{$entries}) {
   % chomp $entry;
+  % $entry = xml_escape $entry;
   % $entry =~ s!(https?://[^\s　]+)!<a href="$1">$1</a>!msg;
   <p><%== $entry %></p>
 % }
