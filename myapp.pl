@@ -4,6 +4,7 @@ use Mojolicious::Lite;
 use Encode;
 use Time::Piece;
 use Mojo::Util;
+use Mojo::JSON;
 
 helper xml_escape => sub {
   shift;
@@ -20,7 +21,8 @@ get '/' => sub {
   open my $fh, '<', $datafile or die $!;
   my @entries = <$fh>;
   close $fh;
-  @entries = map { decode_utf8($_) } reverse @entries;
+  my $json = Mojo::JSON->new;
+  @entries = map { $json->decode($_) } reverse @entries;
   $self->stash(entries => \@entries);
   $self->render('index');
 };
@@ -32,11 +34,14 @@ post '/post' => sub {
     $self->redirect_to('/');
     return;
   }
-  my $now = localtime;
-  $body .= sprintf qq{ (%s %s)}, $now->ymd('/'), $now->hms(':');
+  my $entry = {
+    body => $body,
+    posted => time,
+  };
+  my $data = Mojo::JSON->new->encode($entry);
   my $datafile = qq{myapp.dat};
   open my $fh, '>>', $datafile or die $!;
-  print $fh encode_utf8(qq{$body\n});
+  print $fh qq{$data\n};
   close $fh;
   $self->redirect_to('/');
 };
@@ -55,10 +60,10 @@ __DATA__
 % title '入力フォーム';
 %= include 'form'
 % for my $entry (@{$entries}) {
-  % chomp $entry;
-  % $entry = xml_escape $entry;
-  % $entry =~ s!(https?://[^\s　]+)!<a href="$1">$1</a>!msg;
-  <p><%== $entry %></p>
+  % my $body = xml_escape $entry->{body};
+  % $body =~ s!(https?://[^\s　]+)!<a href="$1">$1</a>!msg;
+  % my $posted = Time::Piece::localtime($entry->{posted});
+  <p><%== $body %> (<%= $posted->ymd('/') %> <%= $posted->hms(':') %>)</p>
 % }
 
 @@ layouts/default.html.ep
