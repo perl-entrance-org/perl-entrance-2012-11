@@ -31,6 +31,7 @@ post '/post' => sub {
   my $self = shift;
   my $body = $self->param('body');
   if ($body =~ /\A[\s　]*\z/ms) {
+    $self->flash(msg => '空文字、空白だけの投稿はできません');
     $self->redirect_to('/');
     return;
   }
@@ -43,6 +44,7 @@ post '/post' => sub {
   open my $fh, '>>', $datafile or die $!;
   print $fh qq{$data\n};
   close $fh;
+  $self->flash(msg => '記事を投稿しました');
   $self->redirect_to('/');
 };
 
@@ -58,6 +60,10 @@ __DATA__
 @@ index.html.ep
 % layout 'default';
 % title '入力フォーム';
+% my $msg = flash 'msg' // '';
+% if ($msg) {
+  <p style="color:#999"><%= $msg %></p>
+% }
 %= include 'form'
 % for my $entry (@{$entries}) {
   % my $body = xml_escape $entry->{body};
