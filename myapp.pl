@@ -49,7 +49,9 @@ __DATA__
 % title '入力フォーム';
 %= include 'form'
 % for my $entry (@{$entries}) {
-  <p><%= $entry %></p>
+  % chomp $entry;
+  % $entry =~ s!(https?://[^\s　]+)!<a href="$1">$1</a>!msg;
+  <p><%== $entry %></p>
 % }
 
 @@ layouts/default.html.ep
