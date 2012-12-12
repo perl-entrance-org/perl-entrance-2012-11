@@ -69,12 +69,18 @@ __DATA__
   % my $body = xml_escape $entry->{body};
   % $body =~ s!(https?://[^\s　]+)!<a href="$1">$1</a>!msg;
   % my $posted = Time::Piece::localtime($entry->{posted});
-  <p><%== $body %> (<%= $posted->ymd('/') %> <%= $posted->hms(':') %>)</p>
+  <p><%== $body %><span class="posted">(<%= $posted->ymd('/') %> <%= $posted->hms(':') %>)</span></p>
 % }
 
 @@ layouts/default.html.ep
 <!DOCTYPE html>
 <html>
-  <head><title><%= title %></title></head>
+  <head>
+    <title><%= title %></title>
+    %= stylesheet '/app.css';
+  </head>
   <body><%= content %></body>
 </html>
+
+@@ app.css
+.posted {font-size: small}
