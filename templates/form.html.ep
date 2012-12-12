@@ -1,0 +1,5 @@
+%= form_for '/post' => method => 'POST' => begin
+  %= text_field 'body'
+  %= submit_button '投稿する'
+% end
+

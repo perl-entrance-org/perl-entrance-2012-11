@@ -49,38 +49,3 @@ post '/post' => sub {
 };
 
 app->start;
-__DATA__
-
-@@ form.html.ep
-%= form_for '/post' => method => 'POST' => begin
-  %= text_field 'body'
-  %= submit_button '投稿する'
-% end
-
-@@ index.html.ep
-% layout 'default';
-% title '入力フォーム';
-% my $msg = flash 'msg' // '';
-% if ($msg) {
-  <p style="color:#999"><%= $msg %></p>
-% }
-%= include 'form'
-% for my $entry (@{$entries}) {
-  % my $body = xml_escape $entry->{body};
-  % $body =~ s!(https?://[^\s　]+)!<a href="$1">$1</a>!msg;
-  % my $posted = Time::Piece::localtime($entry->{posted});
-  <p><%== $body %><span class="posted">(<%= $posted->ymd('/') %> <%= $posted->hms(':') %>)</span></p>
-% }
-
-@@ layouts/default.html.ep
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    %= stylesheet '/app.css';
-  </head>
-  <body><%= content %></body>
-</html>
-
-@@ app.css
-.posted {font-size: small}
